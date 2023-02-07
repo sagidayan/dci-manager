@@ -1,0 +1,9 @@
+---
+dci_topic: {{.Topic}}
+dci_name: {{.Name}}
+dci_tags:
+    - debug
+dci_config_dir: {{.JobFolder}}
+
+# DCIM Test variables
+{{.Variables}}

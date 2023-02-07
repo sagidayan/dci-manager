@@ -1,0 +1,21 @@
+version: "1"
+agents:
+- type: openshift-app
+  component_name: My OpenShift operator
+  tests:
+  - name: GPU Operator E2E
+    target_versions:
+    - "4.12"
+    app_versions:
+    - "v1.11"
+    - "v22.9"
+    variables:
+      # variables will be prefixed by dcim with `dcim_` if they are not prefixed.
+      # Default varibles added by dcim include, `dcim_app_version`, `dcim_target_version`, `dcim_component`.
+      dcim_kubeconfig_path: "PATH/TO/KUBECONFIG"
+    steps:
+    - name: run e2e test
+      command: |
+          podman run -v {{ job_logs.path }}:/test-run-results:z -v {{ dcim_kubeconfig_path }}:/opt/app-root/src/.kube/config:z
+          --rm quay.io/edge-infrastructure/ci-tools-nvidia-gpu-operator:latest make e2e_gpu_test CHANNEL={{ dcim_app_version }}
+

@@ -1,0 +1,64 @@
+---
+debug: true
+version: "1"
+agents:
+- type: "openshift-app"
+  component_name: "NVIDIA GPU Operator"
+  tests:
+  - name: "NVIDIA master bundle sanity"
+    target_versions:
+    - "4.10"
+    - "4.11"
+    - "4.12"
+    app_versions:
+    - "master"
+    steps: &sanity_steps
+    - name: "test1"
+      image: "image.io/image:tag"
+      command: "make test"
+    - name: "cleanup"
+      image: "image.io/image:tag"
+      command: "make clean"
+    - name: "test 2"
+      image: "image.io/image:tag"
+      command: "make test TEST=2"
+  - name: "Certified operator latest sanity"
+    target_versions:
+    - "4.11"
+    - "4.12"
+    app_versions:
+    - "22.9.x"
+    steps: *sanity_steps
+  - name: "Certified operators legacy sanity"
+    target_versions:
+    - "4.10"
+    app_versions:
+    - "1.11.x"
+    steps: *sanity_steps
+  - name: "Certified operators legacy sanity"
+    target_versions:
+    - "4.9"
+    app_versions:
+    - "1.10.x"
+    bundles:
+    - image: "bundle-image"
+      channel: "beta"
+    steps: *sanity_steps
+  - name: "Certified operators legacy sanity"
+    target_versions:
+    - "4.8"
+    app_versions:
+    - "1.9.x"
+    steps: *sanity_steps
+- type: "rhel"
+  component_name: "NVIDIA GPU Driver"
+  tests:
+  - name: "Sample suite"
+    target_versions:
+    - "8"
+    - "9"
+    app_versions:
+    - 503
+    steps:
+    - name: "dummy"
+      command: ls -alh
